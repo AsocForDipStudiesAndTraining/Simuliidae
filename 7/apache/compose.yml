@@ -1,0 +1,65 @@
+services:
+  admin:
+    build:
+      args:
+        - REPOSITORY_FROM
+      context: /software/civicrm.simuliidae/Simuliidae/7/apache/admin
+    depends_on:
+    - vhttp
+    - vsql
+    environment:
+      CIVICRM_DATABASE: null
+      DRUPAL_DATABASE: null
+      MYSQL_DATABASE: null
+      MYSQL_PASSWORD: null
+      MYSQL_ROOT_PASSWORD: null
+      MYSQL_USER: null
+      VSITE: null
+      VSITE_ADMIN_MAIL: null
+      VSITE_ADMIN_NAME: null
+      VSITE_CIVICRM_VER: null
+      VSITE_DOMAIN: null
+      VSITE_ENVIRONMENT: null
+      VSITE_FEATURE: null
+      VSITE_SITE_NAME: null
+      VSITE_THEME: null
+      VSITE_USER_MAIL: null
+      VSITE_USER_NAME: null
+      VSITE_USER_ROLE: null
+    image: simuliidae-admin:7-apache-civicrm-5
+    volumes:
+    - vsite:/var/www/html/sites/default:rw
+  vhttp:
+    build:
+      context: /software/civicrm.simuliidae/Simuliidae/7/apache/drupal
+    depends_on:
+    - vsql
+    environment:
+      CIVICRM_DATABASE: null
+      DRUPAL_DATABASE: null
+      MYSQL_PASSWORD: null
+      MYSQL_USER: null
+      VSITE: null
+      VSITE_DOMAIN: null
+      VSITE_ENVIRONMENT: null
+    image: drupal:7-apache-civicrm-5
+    ports:
+    - 80/tcp
+    - 1978:80/tcp
+    volumes:
+    - vsite:/var/www/html/sites/default:rw
+  vsql:
+    environment:
+      MYSQL_DATABASE: null
+      MYSQL_PASSWORD: null
+      MYSQL_ROOT_PASSWORD: null
+      MYSQL_USER: null
+      VSITE_ENVIRONMENT: null
+    image: blackflysolutions/mariadb:10.1
+    volumes:
+    - vdb:/var/lib/mysql:rw
+version: '3.0'
+volumes:
+  vdb: {}
+  vsite: {}
+
